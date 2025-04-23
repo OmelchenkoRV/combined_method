@@ -1,1 +1,22 @@
+# .github/workflows/deploy.yml
+name: Deploy Microservice
 
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  call-deploy:
+    uses: OmelchenkoRV/microservice-deployment/.github/workflows/deploy-template.yml@main
+    with:
+      docker_image_name: combined-method-service
+      acr_name: combinedservicecontainerregistry
+      container_name: combined-method-service
+      location: ukwest
+    secrets:
+      AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
+      RESOURCE_GROUP: ${{ secrets.RESOURCE_GROUP }}
+      REGISTRY_LOGIN_SERVER: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+      REGISTRY_USERNAME: ${{ secrets.REGISTRY_USERNAME }}
+      REGISTRY_PASSWORD: ${{ secrets.REGISTRY_PASSWORD }}
