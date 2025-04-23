@@ -1,0 +1,1 @@
+This method gets standart srtucture, generated from Excel file and Solving subproblems for providers and IT companies based on the probabilistic method.Then Improvement based on a heuristic procedure for the total solution of subproblems. 
