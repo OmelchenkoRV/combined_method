@@ -1,1 +1,53 @@
 
+
+name: Deploy to Azure Functions
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+env:
+  AZURE_FUNCTIONAPP_NAME: combined-method-api
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: '.'
+  PYTHON_VERSION: '3.12'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+
+    - name: Build and push Docker image
+      uses: azure/docker-login@v1
+      with:
+        login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+        username: ${{ secrets.REGISTRY_USERNAME }}
+        password: ${{ secrets.REGISTRY_PASSWORD }}
+    
+    - name: Build and push Docker image
+      run: |
+        docker build -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/combined-method-api:${{ github.sha }} .
+        docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/combined-method-api:${{ github.sha }}
+
+    - name: Login to Azure
+      uses: azure/login@v1
+      with:
+        creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+    - name: Deploy to Azure Functions
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ env.AZURE_FUNCTIONAPP_NAME }}
+        images: ${{ secrets.REGISTRY_LOGIN_SERVER }}/combined-method-api:${{ github.sha }}
