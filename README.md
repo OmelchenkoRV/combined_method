@@ -4,9 +4,14 @@ This API implements a combined method for solving subproblems for providers and 
 
 ## Overview
 
-The combined method consists of two main steps:
-1. Solving subproblems for providers and IT companies using the probabilistic method (Multi-Objective Particle Swarm Optimization)
-2. Improving the solution using a heuristic procedure
+The combined method consists of seven stages as described in README1.md:
+1. Solving the subproblem for an IT company based on the probabilistic method
+2. Solving the subproblem for providers based on the probabilistic method
+3. Searching for provider solutions based on the IT company solution from stage 1
+4. Searching for IT company solution based on provider solutions from stage 2
+5. Improvement based on heuristic procedure for the total solution (IT company to providers)
+6. Improvement based on heuristic procedure for the total solution (providers to IT company)
+7. Selection of the best solution from stages 5 and 6
 
 ## API Endpoint
 
